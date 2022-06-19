@@ -168,8 +168,8 @@ public class RepliesHandler {
 
         if (cachedReplies.isEmpty()) {
             downloadReplies(parentInfoItem);
-             addRepliesToUI(parentInfoItem);
-             showReplies.setText("Collapse");
+            addRepliesToUI(parentInfoItem);
+            showReplies.setText("Collapse");
         } else {
             cachedReplies.clear();
             repliesView.setVisibility(View.GONE);
