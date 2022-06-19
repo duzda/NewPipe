@@ -184,6 +184,11 @@ public class RepliesHandler {
         } else {
             repliesView.setVisibility(View.GONE);
             showReplies.setVisibility(View.VISIBLE);
+
+            if (showReplies.getText().equals("Collapse")) {
+                addReplies(item);
+            }
+
             showReplies.setOnClickListener(v -> addReplies(item));
         }
     }
