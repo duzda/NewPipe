@@ -1,6 +1,5 @@
 package org.schabi.newpipe.info_list.holder;
 
-import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -8,6 +7,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.schabi.newpipe.R;
 import org.schabi.newpipe.extractor.ListExtractor;
 import org.schabi.newpipe.extractor.comments.CommentsInfo;
 import org.schabi.newpipe.extractor.comments.CommentsInfoItem;
@@ -60,53 +60,47 @@ public class RepliesHandler {
     private Single<ListExtractor.InfoItemsPage<CommentsInfoItem>>
     repliesSingle(final CommentsInfo parentCommentInfo,
                       final CommentsInfoItem parentInfoItem) {
-
         final GetMoreItemsCallable getMoreItems = new GetMoreItemsCallable();
         getMoreItems.setCallableParameters(parentCommentInfo, parentInfoItem);
         return Single.fromCallable(getMoreItems);
-
     }
 
     private SingleObserver<ListExtractor.InfoItemsPage<CommentsInfoItem>>
-    repliesObserver(final CommentsInfoItem parentInfoItem) {
+    repliesObserver() {
+        return new SingleObserver<>() {
 
-        return new SingleObserver<ListExtractor.InfoItemsPage<CommentsInfoItem>>() {
-
-            @SuppressLint("SetTextI18n")
             @Override
             public void onSubscribe(@NonNull final Disposable d) {
-                showReplies.setText("Collapse");
+                showReplies.setText(R.string.hide_comment_replies);
             }
 
             @Override
             public void onSuccess(@NonNull final
                                   ListExtractor.InfoItemsPage<CommentsInfoItem>
                                           commentsInfoItemInfoItemsPage) {
-
                 final List<CommentsInfoItem> actualList
                         = commentsInfoItemInfoItemsPage.getItems();
 
                 cachedReplies.addAll(actualList);
-                addRepliesToUI(parentInfoItem);
+                addRepliesToUI();
             }
 
-            @SuppressLint("SetTextI18n")
             @Override
             public void onError(@NonNull final Throwable e) {
-                showReplies.setText("Error getting replies");
+                showReplies.setText(R.string.error_unable_to_load_comment_replies);
             }
         };
     }
 
     private SingleObserver<CommentsInfo>
         repliesInfoObserver(final CommentsInfoItem parentInfoItem) {
-
-        return new SingleObserver<CommentsInfo>() {
+        return new SingleObserver<>() {
             @Override
 
             public void onSubscribe(@NonNull final Disposable d) {
 
             }
+
             @Override
             public void onSuccess(@NonNull final CommentsInfo commentsInfo) {
                 final Single<ListExtractor.InfoItemsPage<CommentsInfoItem>>
@@ -114,7 +108,7 @@ public class RepliesHandler {
                         repliesSingle(commentsInfo, parentInfoItem);
 
                 final SingleObserver<ListExtractor.InfoItemsPage<CommentsInfoItem>>
-                        getRepliesInfoObserver = repliesObserver(parentInfoItem);
+                        getRepliesInfoObserver = repliesObserver();
 
                 getRepliesInfoSingle
                         .subscribeOn(Schedulers.io())
@@ -122,16 +116,14 @@ public class RepliesHandler {
                         .subscribe(getRepliesInfoObserver);
             }
 
-            @SuppressLint("SetTextI18n")
             @Override
             public void onError(@NonNull final Throwable e) {
-                showReplies.setText("Error getting replies");
+                showReplies.setText(R.string.error_unable_to_load_comment_replies);
             }
         };
     }
 
-
-    public void addRepliesToUI(final CommentsInfoItem parentInfoItem) {
+    public void addRepliesToUI() {
         ((InfoListAdapter) Objects.requireNonNull(repliesView.getAdapter()))
                 .setInfoItemList(cachedReplies);
 
@@ -145,7 +137,6 @@ public class RepliesHandler {
     }
 
     public void downloadReplies(final CommentsInfoItem parentInfoItem) {
-
         final Single<CommentsInfo> parentInfoSingle = ExtractorHelper.getCommentsInfo(
                 parentInfoItem.getServiceId(),
                 parentInfoItem.getUrl(),
@@ -168,12 +159,12 @@ public class RepliesHandler {
 
         if (cachedReplies.isEmpty()) {
             downloadReplies(parentInfoItem);
-            addRepliesToUI(parentInfoItem);
-            showReplies.setText("Collapse");
+            addRepliesToUI();
+            showReplies.setText(R.string.hide_comment_replies);
         } else {
             cachedReplies.clear();
             repliesView.setVisibility(View.GONE);
-            showReplies.setText("Show Replies");
+            showReplies.setText(R.string.show_comment_replies);
         }
     }
 
@@ -185,7 +176,8 @@ public class RepliesHandler {
             repliesView.setVisibility(View.GONE);
             showReplies.setVisibility(View.VISIBLE);
 
-            if (showReplies.getText().equals("Collapse")) {
+            if (showReplies.getText().equals(showReplies.getContext()
+                    .getString(R.string.hide_comment_replies))) {
                 addReplies(item);
             }
 

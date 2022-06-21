@@ -87,6 +87,9 @@
     <string name="download_thumbnail_summary">Turn off to prevent loading thumbnails, saving data and memory usage. Changes clear both in-memory and on-disk image cache</string>
     <string name="show_comments_title">Show comments</string>
     <string name="show_comments_summary">Turn off to hide comments</string>
+    <string name="show_comment_replies">Show replies</string>
+    <string name="hide_comment_replies">Collapse</string>
+    <string name="show_more_comment_replies">Show more replies</string>
     <string name="show_next_and_similar_title">Show \'Next\' and \'Similar\' videos</string>
     <string name="show_description_title">Show description</string>
     <string name="show_description_summary">Turn off to hide video description and additional information</string>
@@ -391,6 +394,7 @@
     <string name="override_current_data">This will override your current setup.</string>
     <string name="import_settings">Do you want to also import settings?</string>
     <string name="error_unable_to_load_comments">Could not load comments</string>
+    <string name="error_unable_to_load_comment_replies">Could not load replies</string>
     <string name="localization_changes_requires_app_restart">The language will change once the app is restarted</string>
     <!-- Kiosk Names -->
     <string name="trending">Trending</string>
